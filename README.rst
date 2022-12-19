@@ -2,8 +2,8 @@ A service to serve and manipulate a set of release build metadata for Path of Ex
 
 Required environment variables:
 
- * ``STATE_DIR``: directory for persistent database state;
- * ``MOLLYGUARD``: secret key needed for mutable updates from clients.
+* ``STATE_DIR``: directory for persistent database state;
+* ``MOLLYGUARD``: secret key needed for mutable updates from clients.
 
 This FastAPI application is best run via something like hypercorn behind a nginx proxy.
 
