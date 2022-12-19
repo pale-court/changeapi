@@ -1,0 +1,6 @@
+*.swp
+/*.db
+/*.env
+/.vscode
+/hypercorn-*.toml
+__pycache__
