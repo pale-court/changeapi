@@ -21,11 +21,17 @@ import json
 app = FastAPI()
 
 
+class Manifest(BaseModel):
+    gid: str
+    size: Optional[int]
+    download: Optional[int]
+
+
 class Build(BaseModel):
     build_id: int
     time_updated: Optional[str]
     version: Optional[str]
-    manifests: Mapping[str, str]
+    manifests: Mapping[str, Manifest]
 
 
 class MockChangeList(BaseModel):
@@ -48,9 +54,15 @@ changes = {
                 "build_id": 8833106,
                 "time_updated": "1653960565",
                 "manifests": {
-                    "238961": "1228835140409683710",
-                    "238962": "6888634665108774252",
-                    "238963": "8951794261227212849",
+                    "238961": {
+                        "gid": "1228835140409683710",
+                    },
+                    "238962": {
+                        "gid": "6888634665108774252",
+                    },
+                    "238963": {
+                        "gid": "8951794261227212849",
+                    },
                 },
             },
         },
@@ -62,9 +74,15 @@ changes = {
                 "build_id": 8855727,
                 "time_updated": "1654145721",
                 "manifests": {
-                    "238961": "8628579843003481755",
-                    "238962": "2542183516457273677",
-                    "238963": "141861304460106257",
+                    "238961": {
+                        "gid": "8628579843003481755",
+                    },
+                    "238962": {
+                        "gid": "2542183516457273677",
+                    },
+                    "238963": {
+                        "gid": "141861304460106257",
+                    },
                 },
             },
         },
@@ -76,9 +94,15 @@ changes = {
                 "build_id": 8930624,
                 "time_updated": "1655251431",
                 "manifests": {
-                    "238961": "1751070635077352462",
-                    "238962": "5654086130423198733",
-                    "238963": "2996040912614990240",
+                    "238961": {
+                        "gid": "1751070635077352462",
+                    },
+                    "238962": {
+                        "gid": "5654086130423198733",
+                    },
+                    "238963": {
+                        "gid": "2996040912614990240",
+                    },
                 },
             },
         },
@@ -86,10 +110,21 @@ changes = {
 }
 
 
+settings.state_dir.mkdir(parents=True, exist_ok=True)
 changes_path = settings.state_dir / "changes.json"
 if changes_path.exists():
     with changes_path.open('r') as fh:
         changes = json.load(fh)
+
+        # Convert the old change format that has manifest gids instead of dicts
+        for cid, change in changes.items():
+            for bid, branch in change['branches'].items():
+                manifests = branch['manifests']
+                depot_ids = list(manifests.keys())
+                for did in depot_ids:
+                    mf = manifests[did]
+                    if isinstance(mf, str):
+                        manifests[did] = {"gid": mf}
 
 # @app.get('/db-changelists')
 # def read_db_changes():
