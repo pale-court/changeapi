@@ -8,10 +8,11 @@ authors = ["Your Name <you@example.com>"]
 python = "^3.10"
 uvicorn = {extras = ["standard"], version = "^0.17.6"}
 hypercorn = "^0.13.2"
-fastapi = "^0.78.0"
+fastapi = "^0.104.1"
 SQLAlchemy = "^1.4.37"
 alembic = "^1.8.0"
 atomicwrites = "^1.4.0"
+pydantic-settings = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
