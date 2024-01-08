@@ -163,8 +163,8 @@ def write_change(cl: MockChangeList, molly_guard: str):
         old = MockChangeList(**changes[cid])
         for branch in old.branches:
             if branch in cl.branches and (v := old.branches[branch].version):
-                if (v2 := cl.branches[branch].version) != v:
-                    v2 = v
+                if (b := cl.branches[branch]).version != v:
+                    b.version = v
         changes[cid] = cl.model_dump()
         save_changes()
 
